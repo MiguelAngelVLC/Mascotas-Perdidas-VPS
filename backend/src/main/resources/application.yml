@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3306/mascotas_perdidas?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Madrid}
+    username: ${SPRING_DATASOURCE_USERNAME:mp_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:mp_password}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+app:
+  jwt-secret: c2VjcmV0S2V5Rm9yTWFzY290YXNQZXJkaWRhc0p3dFNlY3JldEtleUZvck1hc2NvdGFzUGVyZGlkYXM=
+  jwt-expiration-ms: 86400000
+  upload-dir: ${APP_UPLOAD_DIR:./uploads}
+  cors-origins: ${APP_CORS_ORIGINS:http://localhost:4200}
+  # URL pública completa de la API (ej. https://api.tudominio.com).
+  # Vacío en local: se calcula dinámicamente desde la petición HTTP.
+  public-api-url: ${APP_PUBLIC_API_URL:}
+
+logging:
+  level:
+    com.mascotasperdidas: DEBUG
+    org.springframework.security: WARN
