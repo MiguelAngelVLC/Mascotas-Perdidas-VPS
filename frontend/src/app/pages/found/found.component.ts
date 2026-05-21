@@ -32,7 +32,7 @@ import { EmptyStateComponent } from '../../shared/empty-state/empty-state.compon
 
       @if (loading()) {
         <app-loading />
-      } @else if (page()?.content.length === 0) {
+      } @else if (page()?.content?.length === 0) {
         <app-empty-state
           icon="🐾"
           title="No hay animales encontrados"

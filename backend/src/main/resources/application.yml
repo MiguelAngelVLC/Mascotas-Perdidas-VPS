@@ -21,7 +21,7 @@ spring:
       max-request-size: 15MB
 
 app:
-  jwt-secret: c2VjcmV0S2V5Rm9yTWFzY290YXNQZXJkaWRhc0p3dFNlY3JldEtleUZvck1hc2NvdGFzUGVyZGlkYXM=
+  jwt-secret: ${APP_JWT_SECRET:c2VjcmV0S2V5Rm9yTWFzY290YXNQZXJkaWRhc0p3dFNlY3JldEtleUZvck1hc2NvdGFzUGVyZGlkYXM=}
   jwt-expiration-ms: 86400000
   upload-dir: ${APP_UPLOAD_DIR:./uploads}
   cors-origins: ${APP_CORS_ORIGINS:http://localhost:4200}
