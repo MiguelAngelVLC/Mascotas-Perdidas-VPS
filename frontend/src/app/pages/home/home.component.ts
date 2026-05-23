@@ -4,15 +4,20 @@ import { RouterLink } from '@angular/router';
 import { ReportService } from '../../core/services/report.service';
 import { StatsService } from '../../core/services/stats.service';
 import { Report } from '../../core/models/report.model';
-import { Stats } from '../../core/models/page.model';
+import { PageResponse, Stats } from '../../core/models/page.model';
 import { ReportCardComponent } from '../../shared/report-card/report-card.component';
 import { ReportDetailModalComponent } from '../../shared/report-detail-modal/report-detail-modal.component';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { LoadingComponent } from '../../shared/loading/loading.component';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReportCardComponent, ReportDetailModalComponent, LoadingComponent],
+  imports: [
+    CommonModule, RouterLink, ReportCardComponent, ReportDetailModalComponent,
+    PaginationComponent, LoadingComponent, EmptyStateComponent,
+  ],
   template: `
     <div class="min-h-screen">
 
@@ -82,23 +87,40 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
       </section>
 
       <!-- Reportes recientes -->
-      <section class="px-4 sm:px-8 pb-4">
-        <div class="flex items-center justify-between mb-6">
+      <section id="reportes-recientes" class="px-4 sm:px-8 pb-4">
+        <div class="flex items-center justify-between mb-2">
           <h2 class="section-title">Reportes Recientes</h2>
           <div class="flex gap-2">
             <a routerLink="/perdidos"    class="btn-red text-sm">Perdidos</a>
             <a routerLink="/encontrados" class="btn-teal text-sm">Encontrados</a>
           </div>
         </div>
+        <p class="text-sm text-gray-300 mb-6">Últimos reportes publicados por la comunidad</p>
 
         @if (loading()) {
           <app-loading />
+        } @else if (loadError()) {
+          <p class="text-center text-red-200 py-8" role="alert">
+            No se pudieron cargar los reportes. Inténtalo de nuevo más tarde.
+          </p>
+        } @else if (page()?.content?.length === 0) {
+          <app-empty-state
+            icon="🐾"
+            title="Aún no hay reportes"
+            message="Sé el primero en publicar un animal perdido o encontrado."
+            actionLabel="Publicar reporte"
+            actionLink="/reportar" />
         } @else {
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            @for (report of reports(); track report.id) {
+            @for (report of page()?.content ?? []; track report.id) {
               <app-report-card [report]="report" (selected)="selectedReport.set($event)" />
             }
           </div>
+          <app-pagination
+            [currentPage]="currentPage()"
+            [totalPages]="page()?.totalPages ?? 0"
+            [totalElements]="page()?.totalElements ?? 0"
+            (pageChange)="onPageChange($event)" />
         }
       </section>
 
@@ -119,9 +141,13 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
   `,
 })
 export class HomeComponent implements OnInit {
-  loading       = signal(true);
-  reports       = signal<Report[]>([]);
-  stats         = signal<Stats | null>(null);
+  private readonly pageSize = 9;
+
+  loading        = signal(true);
+  loadError      = signal(false);
+  page           = signal<PageResponse<Report> | null>(null);
+  currentPage    = signal(0);
+  stats          = signal<Stats | null>(null);
   selectedReport = signal<Report | null>(null);
 
   steps = [
@@ -137,9 +163,27 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.statsService.getStats().subscribe(s => this.stats.set(s));
-    this.reportService.getReports({ page: 0, size: 6 }).subscribe({
-      next:  page => { this.reports.set(page.content); this.loading.set(false); },
-      error: ()   => this.loading.set(false),
+    this.loadReports();
+  }
+
+  onPageChange(p: number): void {
+    this.currentPage.set(p);
+    this.loadReports();
+    document.getElementById('reportes-recientes')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private loadReports(): void {
+    this.loading.set(true);
+    this.loadError.set(false);
+    this.reportService.getReports({ page: this.currentPage(), size: this.pageSize }).subscribe({
+      next: p => {
+        this.page.set(p);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set(true);
+      },
     });
   }
 }
