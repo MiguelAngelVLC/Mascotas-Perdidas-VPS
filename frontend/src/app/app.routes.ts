@@ -24,6 +24,12 @@ export const routes: Routes = [
     title: 'Mascotas Perdidas – Publicar Reporte',
   },
   {
+    path: 'reportar/:id',
+    loadComponent: () => import('./pages/report-form/report-form.component').then(m => m.ReportFormComponent),
+    canActivate: [authGuard],
+    title: 'Mascotas Perdidas – Editar Reporte',
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
     title: 'Mascotas Perdidas – Iniciar Sesión',

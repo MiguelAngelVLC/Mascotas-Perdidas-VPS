@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../core/services/report.service';
 import { ReportFormData } from '../../core/models/report.model';
 
@@ -16,7 +16,7 @@ import { ReportFormData } from '../../core/models/report.model';
       </a>
 
       <div class="card p-6 sm:p-8">
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">Publicar Reporte</h1>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ editMode() ? 'Editar Reporte' : 'Publicar Reporte' }}</h1>
         <p class="text-gray-500 text-sm mb-6">Completa el formulario para reportar un animal perdido o encontrado.</p>
 
         @if (errorMsg()) {
@@ -27,7 +27,8 @@ import { ReportFormData } from '../../core/models/report.model';
 
         @if (success()) {
           <div class="bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm mb-4" role="status">
-            ¡Reporte publicado correctamente! <a routerLink="/" class="underline font-medium">Volver al inicio</a>
+            {{ editMode() ? '¡Reporte actualizado correctamente!' : '¡Reporte publicado correctamente!' }}
+            <a routerLink="/" class="underline font-medium">Volver al inicio</a>
           </div>
         }
 
@@ -151,6 +152,9 @@ import { ReportFormData } from '../../core/models/report.model';
             @if (imagePreview()) {
               <div class="mt-3">
                 <img [src]="imagePreview()!" alt="Previsualización" class="w-40 h-28 object-cover rounded-lg border border-gray-200">
+                @if (editMode() && !newFileSelected()) {
+                  <p class="text-xs text-gray-400 mt-1">Foto actual. Elige un nuevo archivo para reemplazarla.</p>
+                }
               </div>
             }
           </div>
@@ -190,9 +194,13 @@ import { ReportFormData } from '../../core/models/report.model';
           </p>
 
           <div class="flex justify-end gap-3">
-            <a routerLink="/" class="btn-secondary">Cancelar</a>
+            <a [routerLink]="editMode() ? ['/perfil'] : ['/']" class="btn-secondary">Cancelar</a>
             <button type="submit" [disabled]="submitting()" class="btn-primary">
-              {{ submitting() ? 'Publicando…' : 'Publicar Reporte' }}
+              @if (submitting()) {
+                {{ editMode() ? 'Guardando…' : 'Publicando…' }}
+              } @else {
+                {{ editMode() ? 'Guardar cambios' : 'Publicar Reporte' }}
+              }
             </button>
           </div>
         </form>
@@ -202,16 +210,21 @@ import { ReportFormData } from '../../core/models/report.model';
 })
 export class ReportFormComponent implements OnInit {
   form!: FormGroup;
-  submitting  = signal(false);
-  errorMsg    = signal('');
-  success     = signal(false);
-  imagePreview = signal<string | null>(null);
-  today = new Date().toISOString().split('T')[0];
+  submitting    = signal(false);
+  errorMsg      = signal('');
+  success       = signal(false);
+  imagePreview  = signal<string | null>(null);
+  editMode      = signal(false);
+  newFileSelected = signal(false);
+  today         = new Date().toISOString().split('T')[0];
+
+  private reportId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private reportService: ReportService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -232,12 +245,45 @@ export class ReportFormComponent implements OnInit {
       contactPhone:         ['', Validators.required],
       contactEmail:         ['', Validators.email],
     });
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.reportId = Number(idParam);
+      this.editMode.set(true);
+      this.reportService.getReport(this.reportId).subscribe({
+        next: (report) => {
+          this.form.patchValue({
+            status:              report.status,
+            animalType:          report.animalType,
+            name:                report.name ?? '',
+            breed:               report.breed ?? '',
+            color:               report.color ?? '',
+            size:                report.size ?? '',
+            eventDate:           report.eventDate,
+            description:         report.description ?? '',
+            distinctiveFeatures: report.distinctiveFeatures ?? '',
+            locationText:        report.locationText ?? '',
+            city:                report.city ?? '',
+            province:            report.province ?? '',
+            contactName:         report.contactName,
+            contactPhone:        report.contactPhone,
+            contactEmail:        report.contactEmail ?? '',
+          });
+          if (report.primaryImageUrl) {
+            this.imagePreview.set(report.primaryImageUrl);
+          }
+        },
+        error: () => {
+          this.errorMsg.set('No se pudo cargar el reporte. Verifica que tienes permiso para editarlo.');
+        },
+      });
+    }
   }
 
   onFileChange(ev: Event): void {
     const file = (ev.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    this.form.patchValue({ image: file });
+    this.newFileSelected.set(true);
     const reader = new FileReader();
     reader.onload = () => this.imagePreview.set(reader.result as string);
     reader.readAsDataURL(file);
@@ -258,14 +304,19 @@ export class ReportFormComponent implements OnInit {
       image: (document.getElementById('image') as HTMLInputElement)?.files?.[0],
     };
 
-    this.reportService.createReport(data).subscribe({
+    const request$ = this.editMode() && this.reportId !== null
+      ? this.reportService.updateReport(this.reportId, data)
+      : this.reportService.createReport(data);
+
+    request$.subscribe({
       next: () => {
         this.success.set(true);
         this.submitting.set(false);
-        setTimeout(() => this.router.navigate(['/']), 2500);
+        const redirect = this.editMode() ? ['/perfil'] : ['/'];
+        setTimeout(() => this.router.navigate(redirect), 2500);
       },
       error: (err) => {
-        this.errorMsg.set(err?.error?.message || 'Error al publicar el reporte. Inténtalo de nuevo.');
+        this.errorMsg.set(err?.error?.message || 'Error al guardar el reporte. Inténtalo de nuevo.');
         this.submitting.set(false);
       },
     });

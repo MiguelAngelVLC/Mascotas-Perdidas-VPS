@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ReportService } from '../../core/services/report.service';
 import { Report } from '../../core/models/report.model';
@@ -58,7 +58,20 @@ import { EmptyStateComponent } from '../../shared/empty-state/empty-state.compon
       } @else {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
           @for (report of page()?.content ?? []; track report.id) {
-            <app-report-card [report]="report" (selected)="selected.set($event)" />
+            <div class="flex flex-col gap-2">
+              <app-report-card [report]="report" (selected)="selected.set($event)" />
+              <div class="flex gap-2">
+                <a [routerLink]="['/reportar', report.id]"
+                   class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                  Editar
+                </a>
+                <button
+                  (click)="confirmDelete(report)"
+                  class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+                  Eliminar
+                </button>
+              </div>
+            </div>
           }
         </div>
         <app-pagination
@@ -79,13 +92,22 @@ export class ProfileComponent implements OnInit {
   selected     = signal<Report | null>(null);
   currentPage  = signal(0);
 
-  constructor(private reportService: ReportService) {}
+  constructor(private reportService: ReportService, private router: Router) {}
 
   ngOnInit(): void { this.load(); }
 
   onPageChange(p: number): void {
     this.currentPage.set(p);
     this.load();
+  }
+
+  confirmDelete(report: Report): void {
+    const name = report.name || 'este reporte';
+    if (!confirm(`¿Seguro que quieres eliminar "${name}"? Esta acción no se puede deshacer.`)) return;
+    this.reportService.deleteReport(report.id).subscribe({
+      next: () => this.load(),
+      error: (err) => alert(err?.error?.message || 'No se pudo eliminar el reporte.'),
+    });
   }
 
   private load(): void {

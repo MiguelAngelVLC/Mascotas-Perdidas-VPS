@@ -9,7 +9,7 @@ SET NAMES utf8mb4;
 -- Usuario administrador
 INSERT IGNORE INTO users (id, username, email, password, full_name, phone) VALUES
 (1, 'admin', 'admin@mascotasperdidas.es',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'Administrador', '+34 600 000 001');
 
 INSERT IGNORE INTO user_roles (user_id, role_id) VALUES (1, 1), (1, 2);
@@ -17,19 +17,19 @@ INSERT IGNORE INTO user_roles (user_id, role_id) VALUES (1, 1), (1, 2);
 -- Usuarios de ejemplo
 INSERT IGNORE INTO users (id, username, email, password, full_name, phone) VALUES
 (2, 'maria_garcia', 'maria@example.com',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'María García', '+34 612 345 678'),
 (3, 'carlos_rod', 'carlos@example.com',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'Carlos Rodríguez', '+34 623 456 789'),
 (4, 'ana_lopez', 'ana@example.com',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'Ana López', '+34 634 567 890'),
 (5, 'pedro_mart', 'pedro@example.com',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'Pedro Martínez', '+34 645 678 901'),
 (6, 'laura_sanch', 'laura@example.com',
- '$2a$10$7GjZnBJ.W/I7ZDj7wH8XDejuL4aXk0XaCVwXVFB.X4Y0J2SipHJPy',
+ '$2a$10$KLzRQaSpyGfyEoOBqtlBluHOF25cj0gKofOjk21fB0z0LczceTeUu',
  'Laura Sánchez', '+34 656 789 012');
 
 INSERT IGNORE INTO user_roles (user_id, role_id) VALUES
