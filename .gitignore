@@ -1,3 +1,7 @@
+# ─── Angular cache (raíz y frontend) ───────────────────────────────────────────
+.angular/
+.cursor/
+
 # ─── Frontend ──────────────────────────────────────────────────────────────────
 frontend/node_modules/
 frontend/dist/
