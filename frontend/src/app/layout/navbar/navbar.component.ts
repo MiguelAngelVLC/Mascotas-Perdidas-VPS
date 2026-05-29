@@ -25,7 +25,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
         <!-- Mobile hamburger -->
         <div class="sm:hidden flex justify-between items-center">
-          <span class="text-white font-semibold">Mascotas Perdidas</span>
+          <span class="text-gray-900 font-semibold">Mascotas Perdidas</span>
           <button (click)="open.set(!open())"
                   class="text-white text-2xl focus-visible:outline-2"
                   [attr.aria-expanded]="open()"

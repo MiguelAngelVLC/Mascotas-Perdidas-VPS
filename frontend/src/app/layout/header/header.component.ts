@@ -9,16 +9,21 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [RouterLink, CommonModule],
   template: `
     <header class="bg-white shadow-sm px-4 sm:px-8 py-3">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="max-w-7xl mx-auto flex items-center gap-4">
 
-        <!-- Logo + nombre -->
-        <a routerLink="/" class="flex items-center gap-3 no-underline">
-          <div class="w-12 h-12 bg-teal rounded-xl flex items-center justify-center text-2xl" aria-hidden="true">🐾</div>
-          <span class="text-xl font-bold text-gray-900 hidden sm:block">Mascotas Perdidas</span>
+        <a routerLink="/" class="shrink-0 no-underline">
+          <img src="assets/images/logo.webp"
+               alt="Mascotas Perdidas"
+               class="w-40 h-24 rounded-xl object-contain" />
         </a>
 
-        <!-- Perfil / Login -->
-        <div class="flex items-center gap-2">
+        <div class="flex-1 flex justify-center items-center hidden sm:flex min-w-0">
+          <img src="assets/images/Rotulo.webp"
+               alt="Mascotas Perdidas"
+               class="max-h-24 w-auto object-contain" />
+        </div>
+
+        <div class="shrink-0 flex items-center gap-2">
           @if (auth.isLoggedIn()) {
             <a routerLink="/reportar"
                class="btn-teal text-sm hidden sm:inline-flex items-center gap-1">

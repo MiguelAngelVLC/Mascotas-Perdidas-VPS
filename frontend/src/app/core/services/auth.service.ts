@@ -31,11 +31,15 @@ export class AuthService {
     return this.http.post<User>('/api/auth/register', req);
   }
 
-  logout(): void {
+  clearSession(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     this._token.set(null);
     this._user.set(null);
+  }
+
+  logout(): void {
+    this.clearSession();
     this.router.navigate(['/']);
   }
 

@@ -42,7 +42,7 @@ public class ReportController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ReportResponse> create(
-        @Valid @ModelAttribute ReportRequest reportRequest,
+        @Valid @RequestPart("report") ReportRequest reportRequest,
         @RequestPart(value = "image", required = false) MultipartFile image,
         @AuthenticationPrincipal UserDetails userDetails,
         HttpServletRequest request
@@ -54,7 +54,7 @@ public class ReportController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ReportResponse> update(
         @PathVariable Long id,
-        @Valid @ModelAttribute ReportRequest reportRequest,
+        @Valid @RequestPart("report") ReportRequest reportRequest,
         @RequestPart(value = "image", required = false) MultipartFile image,
         @AuthenticationPrincipal UserDetails userDetails,
         HttpServletRequest request

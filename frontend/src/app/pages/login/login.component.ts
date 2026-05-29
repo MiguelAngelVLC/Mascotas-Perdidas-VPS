@@ -82,6 +82,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
+    if (this.route.snapshot.queryParamMap.get('reason') === 'sessionExpired') {
+      this.errorMsg.set('Tu sesión ha expirado. Inicia sesión de nuevo.');
+    }
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
       password:        ['', Validators.required],

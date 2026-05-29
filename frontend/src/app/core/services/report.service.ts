@@ -43,15 +43,11 @@ export class ReportService {
 
   private toFormData(data: ReportFormData): FormData {
     const fd = new FormData();
-    (Object.keys(data) as (keyof ReportFormData)[]).forEach(key => {
-      const val = data[key];
-      if (val === undefined || val === null) return;
-      if (key === 'image' && val instanceof File) {
-        fd.append('image', val, val.name);
-      } else {
-        fd.append(key, String(val));
-      }
-    });
+    const { image, ...report } = data;
+    fd.append('report', new Blob([JSON.stringify(report)], { type: 'application/json' }));
+    if (image instanceof File) {
+      fd.append('image', image, image.name);
+    }
     return fd;
   }
 }
