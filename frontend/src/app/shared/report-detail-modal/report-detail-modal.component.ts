@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '../../core/models/report.model';
+import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS, ANIMAL_TYPE_IMG_PATHS } from '../../core/models/report.model';
 
 @Component({
   selector: 'app-report-detail-modal',
@@ -45,9 +45,14 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
 
               <!-- Info -->
               <div class="grid grid-cols-2 gap-3 text-sm text-gray-700 mb-4">
-                <div>
+                <div class="flex items-center gap-1 flex-wrap">
                   <span class="font-semibold">Tipo:</span>
-                  {{ typeIcon() }} {{ typeLabel() }}
+                  @if (typeImgPath()) {
+                    <img [src]="typeImgPath()!" [alt]="typeLabel()" class="w-5 h-5 inline object-contain">
+                  } @else {
+                    {{ typeIcon() }}
+                  }
+                  {{ typeLabel() }}
                 </div>
                 @if (report.color) {
                   <div><span class="font-semibold">Color:</span> {{ report.color }}</div>
@@ -61,7 +66,10 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
                 </div>
                 @if (report.locationText || report.city) {
                   <div class="col-span-2">
-                    <span class="font-semibold">📍 Ubicación:</span>
+                    <span class="font-semibold flex items-center gap-1">
+                      <img src="assets/images/icons/ubicacion.png" alt="Ubicación" class="w-4 h-4 object-contain">
+                      Ubicación:
+                    </span>
                     {{ report.locationText || '' }} {{ report.city ? '(' + report.city + ')' : '' }}
                   </div>
                 }
@@ -83,11 +91,11 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
                 <h3 class="font-semibold text-gray-800 mb-3">Información de contacto</h3>
                 <div class="space-y-1.5 text-sm text-gray-700">
                   <div class="flex items-center gap-2">
-                    <span aria-hidden="true">👤</span>
+                    <img src="assets/images/icons/usuario.png" alt="Contacto" class="w-4 h-4 object-contain flex-shrink-0">
                     <span>{{ report.contactName }}</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span aria-hidden="true">📞</span>
+                    <img src="assets/images/icons/telefono2.png" alt="Teléfono" class="w-4 h-4 object-contain flex-shrink-0">
                     <a [href]="'tel:' + report.contactPhone" class="text-primary-light hover:underline">
                       {{ report.contactPhone }}
                     </a>
@@ -130,6 +138,9 @@ export class ReportDetailModalComponent {
   statusLabel() { return this.report ? STATUS_LABELS[this.report.status] : ''; }
   typeLabel() { return this.report ? ANIMAL_TYPE_LABELS[this.report.animalType] : ''; }
   typeIcon() { return this.report ? ANIMAL_TYPE_ICONS[this.report.animalType] : ''; }
+  typeImgPath(): string | null {
+    return this.report ? (ANIMAL_TYPE_IMG_PATHS[this.report.animalType] ?? null) : null;
+  }
   sizeLabel() {
     const map = { SMALL: 'Pequeño', MEDIUM: 'Mediano', LARGE: 'Grande' };
     return this.report?.size ? map[this.report.size] : '';

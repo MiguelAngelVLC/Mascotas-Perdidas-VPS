@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
 CREATE TABLE IF NOT EXISTS reports (
     id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     status               ENUM('LOST','FOUND') NOT NULL,
-    animal_type          ENUM('DOG','CAT','BIRD','OTHER') NOT NULL DEFAULT 'OTHER',
+    animal_type          ENUM('DOG','CAT','BIRD','REPTILE','OTHER') NOT NULL DEFAULT 'OTHER',
     name                 VARCHAR(100)    DEFAULT NULL,
     breed                VARCHAR(100)    DEFAULT NULL,
     color                VARCHAR(100)    DEFAULT NULL,

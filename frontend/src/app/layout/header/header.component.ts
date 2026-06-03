@@ -32,9 +32,8 @@ import { AuthService } from '../../core/services/auth.service';
             <a routerLink="/perfil"
                class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-1.5 transition-colors"
                [attr.aria-label]="'Perfil de ' + auth.user()?.fullName">
-              <div class="w-8 h-8 bg-red-pet rounded-full flex items-center justify-center text-white font-bold text-sm">
-                {{ initial() }}
-              </div>
+              <img src="assets/images/icons/Usuario2.png" alt="Avatar de usuario"
+                   class="w-8 h-8 rounded-full object-cover">
               <span class="text-gray-900 text-sm font-medium hidden md:block">{{ auth.user()?.fullName }}</span>
             </a>
             <button (click)="auth.logout()"

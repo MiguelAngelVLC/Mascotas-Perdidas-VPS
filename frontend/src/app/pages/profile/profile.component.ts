@@ -23,9 +23,8 @@ import { EmptyStateComponent } from '../../shared/empty-state/empty-state.compon
 
       <!-- Cabecera perfil -->
       <div class="card p-6 sm:p-8 mb-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
-        <div class="w-20 h-20 bg-red-pet rounded-full flex items-center justify-center text-3xl font-bold text-white flex-shrink-0">
-          {{ initial() }}
-        </div>
+        <img src="assets/images/icons/Usuario2.png" alt="Avatar de usuario"
+             class="w-20 h-20 rounded-full object-cover flex-shrink-0">
         <div class="flex-1 text-center sm:text-left">
           <h1 class="text-2xl font-bold text-gray-900">{{ auth.user()?.fullName }}</h1>
           <p class="text-gray-500 text-sm">{{ auth.user()?.email }}</p>
@@ -62,12 +61,12 @@ import { EmptyStateComponent } from '../../shared/empty-state/empty-state.compon
               <app-report-card [report]="report" (selected)="selected.set($event)" />
               <div class="flex gap-2">
                 <a [routerLink]="['/reportar', report.id]"
-                   class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                   class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg bg-green-500 border border-green-600 text-white hover:bg-green-600 transition-colors">
                   Editar
                 </a>
                 <button
                   (click)="confirmDelete(report)"
-                  class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+                  class="flex-1 text-center text-sm font-medium py-1.5 px-3 rounded-lg bg-red-500 border border-red-600 text-white hover:bg-red-600 transition-colors">
                   Eliminar
                 </button>
               </div>

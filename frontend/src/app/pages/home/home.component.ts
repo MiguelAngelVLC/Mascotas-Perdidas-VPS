@@ -33,10 +33,6 @@ import { EmptyStateComponent } from '../../shared/empty-state/empty-state.compon
             Conectamos animales perdidos y encontrados con sus familias.
             Cada publicación puede ser el comienzo de un feliz reencuentro.
           </p>
-          <div class="flex gap-3 flex-wrap justify-center">
-            <a routerLink="/reportar" class="btn-primary">Publicar Reporte</a>
-            <a routerLink="/perdidos" class="btn-outline border-gray-800 text-gray-900">Ver Perdidos</a>
-          </div>
         </div>
       </section>
 

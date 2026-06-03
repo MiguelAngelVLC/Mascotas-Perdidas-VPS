@@ -24,8 +24,9 @@ import { RouterLink } from '@angular/router';
             y ponerse en contacto directo con el anunciante. Sin intermediarios, sin costes.
           </p>
         </div>
-        <div class="w-full sm:w-48 flex-shrink-0 flex items-center justify-center">
-          <span class="text-8xl" aria-hidden="true">🐾</span>
+        <div class="w-full sm:w-48 flex-shrink-0 self-stretch flex items-stretch justify-center min-h-0">
+          <img src="assets/images/SobreNosotros.webp" alt="Sobre Nosotros"
+               class="w-full object-cover rounded-xl">
         </div>
       </div>
 

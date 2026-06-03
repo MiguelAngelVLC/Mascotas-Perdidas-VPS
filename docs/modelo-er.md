@@ -43,7 +43,7 @@ Valores: `ROLE_USER`, `ROLE_ADMIN`
 |----------------------|-------------------------------|----------------------------|
 | id                   | BIGINT UNSIGNED               | PK, AUTO_INCREMENT         |
 | status               | ENUM('LOST','FOUND')          | NOT NULL                   |
-| animal_type          | ENUM('DOG','CAT','BIRD','OTHER')| NOT NULL                  |
+| animal_type          | ENUM('DOG','CAT','BIRD','REPTILE','OTHER')| NOT NULL           |
 | name                 | VARCHAR(100)                  | NULLABLE                   |
 | breed                | VARCHAR(100)                  | NULLABLE                   |
 | color                | VARCHAR(100)                  | NULLABLE                   |

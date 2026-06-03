@@ -26,6 +26,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
           <option value="DOG">Perro</option>
           <option value="CAT">Gato</option>
           <option value="BIRD">Ave</option>
+          <option value="REPTILE">Reptil</option>
           <option value="OTHER">Otro</option>
         </select>
       </div>

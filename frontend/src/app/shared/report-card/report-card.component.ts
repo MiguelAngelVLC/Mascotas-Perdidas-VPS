@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '../../core/models/report.model';
+import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS, ANIMAL_TYPE_IMG_PATHS } from '../../core/models/report.model';
 
 @Component({
   selector: 'app-report-card',
@@ -33,9 +33,14 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
             <h3 class="text-lg font-semibold text-gray-900">{{ report.name || 'Sin nombre' }}</h3>
             <p class="text-sm text-gray-500">{{ report.breed || 'Raza desconocida' }}</p>
           </div>
-          <span class="text-xl" [attr.aria-label]="typeLabel()" title="{{ typeLabel() }}">
-            {{ typeIcon() }}
-          </span>
+          @if (typeImgPath()) {
+            <img [src]="typeImgPath()!" [alt]="typeLabel()" title="{{ typeLabel() }}"
+                 class="w-8 h-8 object-contain">
+          } @else {
+            <span class="text-xl" [attr.aria-label]="typeLabel()" title="{{ typeLabel() }}">
+              {{ typeIcon() }}
+            </span>
+          }
         </div>
 
         <p class="text-sm text-gray-600 line-clamp-2 mb-3 flex-1">
@@ -44,11 +49,11 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
 
         <div class="text-xs text-gray-400 space-y-1 mb-3">
           <div class="flex items-center gap-1">
-            <span aria-hidden="true">📍</span>
+            <img src="assets/images/icons/ubicacion.png" alt="Ubicación" class="w-4 h-4 object-contain flex-shrink-0">
             <span>{{ report.locationText || report.city || '—' }}</span>
           </div>
           <div class="flex items-center gap-1">
-            <span aria-hidden="true">📅</span>
+            <img src="assets/images/icons/calendario.png" alt="Fecha" class="w-4 h-4 object-contain flex-shrink-0">
             <span>{{ report.eventDate | date:'dd/MM/yyyy' }}</span>
           </div>
         </div>
@@ -56,11 +61,11 @@ import { Report, STATUS_LABELS, ANIMAL_TYPE_LABELS, ANIMAL_TYPE_ICONS } from '..
         <div class="border-t border-gray-100 pt-3">
           <p class="text-xs font-medium text-gray-500 mb-1">Contacto:</p>
           <div class="flex items-center gap-1 text-xs text-gray-600">
-            <span aria-hidden="true">👤</span>
+            <img src="assets/images/icons/usuario.png" alt="Contacto" class="w-4 h-4 object-contain flex-shrink-0">
             <span>{{ report.contactName }}</span>
           </div>
           <div class="flex items-center gap-1 text-xs text-gray-600">
-            <span aria-hidden="true">📞</span>
+            <img src="assets/images/icons/telefono2.png" alt="Teléfono" class="w-4 h-4 object-contain flex-shrink-0">
             <span>{{ report.contactPhone }}</span>
           </div>
         </div>
@@ -83,6 +88,9 @@ export class ReportCardComponent {
   }
   typeIcon(): string {
     return ANIMAL_TYPE_ICONS[this.report.animalType];
+  }
+  typeImgPath(): string | null {
+    return ANIMAL_TYPE_IMG_PATHS[this.report.animalType] ?? null;
   }
   onImgError(ev: Event): void {
     (ev.target as HTMLImageElement).src = 'assets/images/no-photo.svg';

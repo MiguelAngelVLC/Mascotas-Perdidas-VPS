@@ -87,6 +87,6 @@ public class Report {
     private List<ReportImage> images = new ArrayList<>();
 
     public enum Status { LOST, FOUND }
-    public enum AnimalType { DOG, CAT, BIRD, OTHER }
+    public enum AnimalType { DOG, CAT, BIRD, REPTILE, OTHER }
     public enum Size { SMALL, MEDIUM, LARGE }
 }

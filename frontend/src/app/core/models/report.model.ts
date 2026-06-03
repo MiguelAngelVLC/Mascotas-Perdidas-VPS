@@ -1,5 +1,5 @@
 export type ReportStatus = 'LOST' | 'FOUND';
-export type AnimalType  = 'DOG' | 'CAT' | 'BIRD' | 'OTHER';
+export type AnimalType  = 'DOG' | 'CAT' | 'BIRD' | 'REPTILE' | 'OTHER';
 export type AnimalSize  = 'SMALL' | 'MEDIUM' | 'LARGE';
 
 export interface Report {
@@ -61,10 +61,11 @@ export const STATUS_LABELS: Record<ReportStatus, string> = {
 };
 
 export const ANIMAL_TYPE_LABELS: Record<AnimalType, string> = {
-  DOG:   'Perro',
-  CAT:   'Gato',
-  BIRD:  'Ave',
-  OTHER: 'Otro',
+  DOG:     'Perro',
+  CAT:     'Gato',
+  BIRD:    'Ave',
+  REPTILE: 'Reptil',
+  OTHER:   'Otro',
 };
 
 export const ANIMAL_SIZE_LABELS: Record<AnimalSize, string> = {
@@ -74,8 +75,16 @@ export const ANIMAL_SIZE_LABELS: Record<AnimalSize, string> = {
 };
 
 export const ANIMAL_TYPE_ICONS: Record<AnimalType, string> = {
-  DOG:   '🐶',
-  CAT:   '🐱',
-  BIRD:  '🐦',
-  OTHER: '🐾',
+  DOG:     '🐶',
+  CAT:     '🐱',
+  BIRD:    '🐦',
+  REPTILE: '🦎',
+  OTHER:   '🐾',
+};
+
+export const ANIMAL_TYPE_IMG_PATHS: Partial<Record<AnimalType, string>> = {
+  DOG:     'assets/images/icons/perro.png',
+  CAT:     'assets/images/icons/gato.png',
+  BIRD:    'assets/images/icons/loro.png',
+  REPTILE: 'assets/images/icons/serpiente.png',
 };
